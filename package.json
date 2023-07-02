@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/chicho69-cesar/property-sales/issues"
   },
-  "homepage": "https://github.com/chicho69-cesar/property-sales#readme"
+  "homepage": "https://github.com/chicho69-cesar/property-sales#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }

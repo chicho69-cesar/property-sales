@@ -31,12 +31,21 @@
   "homepage": "https://github.com/chicho69-cesar/property-sales#readme",
   "dependencies": {
     "express": "^4.18.2",
-    "pug": "^3.0.2"
+    "mysql2": "^3.4.3",
+    "pug": "^3.0.2",
+    "sequelize": "^6.32.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
+    "eslint": "^8.44.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "postcss": "^8.4.24",
     "postcss-cli": "^10.1.0",
+    "prettier": "^2.8.8",
     "tailwindcss": "^3.3.2"
   }
 }

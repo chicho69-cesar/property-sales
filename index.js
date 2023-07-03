@@ -7,6 +7,9 @@ const app = express()
 // Port to listen the app
 const port = 3000
 
+// Middlewares
+app.use(express.static('public'))
+
 // Routes middlewares
 app.use('/auth', userRoutes)
 

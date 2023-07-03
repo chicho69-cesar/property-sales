@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { formLogin, formRegister } from '../controllers/users.controller.js'
 
 const router = Router()
 
@@ -9,8 +10,7 @@ const router = Router()
   })
 }) */
 
-router.get('/login', (req, res) => {
-  res.render('auth/login')
-})
+router.get('/login', formLogin)
+router.get('/register', formRegister)
 
 export default router

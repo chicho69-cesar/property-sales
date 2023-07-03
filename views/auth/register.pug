@@ -1,5 +1,29 @@
 extends ../layouts/index
 
 block content
-  div 
-    h2(class='text-center text-6xl font-extrabold') Crea una cuenta
+  div.py-10.pt-2
+    h1(class="text-4xl my-10 mt-5 font-extrabold text-center") Bienes 
+      span.font-normal Raíces
+    h2(class='text-center text-5xl font-extrabold')= page
+
+    .mt-8.mx-auto.max-w-md
+      div(class="bg-white py-8 px-4 shadow")
+        form(class="space-y-5") 
+          div 
+            label(for="name" class="block text-sm uppercase text-gray-500 mb-2 font-bold") Tu Nombre 
+            input(id="name" name="name" type="text" placeholder="Tu Nombre" class="w-full px-3 py-2 border border-gray-300 outline-none rounded-md placeholder-gray-400")
+          div 
+            label(for="email" class="block text-sm uppercase text-gray-500 mb-2 font-bold") Tu Email
+            input(id="email" name="email" type="email" placeholder="Tu Email" class="w-full px-3 py-2 border border-gray-300 outline-none rounded-md placeholder-gray-400")
+          div 
+            label(for="password" class="block text-sm uppercase text-gray-500 mb-2 font-bold") Tu Password
+            input(id="password" name="password" type="password" placeholder="Tu Password" class="w-full px-3 py-2 border border-gray-300 outline-none rounded-md placeholder-gray-400")
+          div 
+            label(for="retype_password" class="block text-sm uppercase text-gray-500 mb-2 font-bold") Repite tu Password
+            input(id="retype_password" name="retype_password" type="password" placeholder="Repite tu Password" class="w-full px-3 py-2 border border-gray-300 outline-none rounded-md placeholder-gray-400")
+
+          div(class="flex items-center justify-between")
+            a(class="text-indigo-500 text-sm" href="/auth/login") ¿Ya tienes cuenta? Inicia Sesión 
+            a(class="text-indigo-500 text-sm" href="/auth/forgot-password") Olvide mi Password
+
+          input(type="submit", value="Crear Cuenta" class="w-full text-white font-bold py-3 cursor-pointer bg-indigo-600 hover:bg-indigo-700")

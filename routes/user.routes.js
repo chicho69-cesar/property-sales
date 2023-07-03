@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { formLogin, formRegister } from '../controllers/users.controller.js'
+import { formLogin, formRegister, formForgotPassword } from '../controllers/users.controller.js'
 
 const router = Router()
 
@@ -12,5 +12,6 @@ const router = Router()
 
 router.get('/login', formLogin)
 router.get('/register', formRegister)
+router.get('/forgot-password', formForgotPassword)
 
 export default router

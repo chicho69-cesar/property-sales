@@ -1,18 +1,19 @@
 import { request, response } from 'express'
 
-const formLogin = (req = request, res = response) => {
+export const formLogin = (req = request, res = response) => {
   res.render('auth/login', {
-    // 
+    page: 'Iniciar Sesión',
   })
 }
 
-const formRegister = (req = request, res = response) => {
+export const formRegister = (req = request, res = response) => {
   res.render('auth/register', {
-    // 
+    page: 'Crear Cuenta',
   })
 }
 
-export {
-  formLogin,
-  formRegister
+export const formForgotPassword = (req = request, res = response) => {
+  res.render('auth/forgot-password', {
+    page: 'Recupera tu acceso a Bienes Raíces',
+  })
 }

@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/chicho69-cesar/property-sales#readme",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "mysql2": "^3.4.3",
     "pug": "^3.0.2",

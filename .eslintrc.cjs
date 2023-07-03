@@ -19,5 +19,8 @@ module.exports = {
     ],
     'no-console': 'off',
     'no-unused-vars': ['off'],
+    'import/no-extraneous-dependencies': [
+      'off',
+    ],
   },
 }

@@ -21,7 +21,11 @@ class Server {
 
   async dbConnection() {
     try {
+      // Authenticate with the database
       await db.authenticate()
+      // Sync changes on models for the db tables
+      db.sync()
+
       this.dbStatus = 'Connected'
       console.log(`Database ${this.dbStatus}...`)
     } catch (error) {
@@ -30,15 +34,23 @@ class Server {
   }
 
   middlewares() {
+    // URL encoded for POST requests with form data
+    this.app.use(express.urlencoded({ extended: true }))
+    // JSON parser for API requests
+    this.app.use(express.json())
+    // Enable the use of the public folder
     this.app.use(express.static('public'))
   }
 
   routes() {
+    // Auth routes
     this.app.use('/auth', userRoutes)
   }
 
   config() {
+    // Config pug as template engine
     this.app.set('view engine', 'pug')
+    // Config pug views folder on folder 'views'
     this.app.set('views', './views')
   }
 

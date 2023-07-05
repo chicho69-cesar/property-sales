@@ -1,7 +1,8 @@
+import bcrypt from 'bcrypt'
 import { request, response } from 'express'
 import { validationResult } from 'express-validator'
 
-import emailRegister from '../helpers/emails.js'
+import { emailForgotPassword, emailRegister } from '../helpers/emails.js'
 import { generateId } from '../helpers/tokens.js'
 import User from '../models/user.js'
 
@@ -99,5 +100,93 @@ export const confirmAccount = async (req = request, res = response) => {
 export const formForgotPassword = (req = request, res = response) => {
   res.render('auth/forgot-password', {
     page: 'Recupera tu acceso a Bienes Raíces',
+  })
+}
+
+export const resetPassword = async (req = request, res = response) => {
+  const { email } = req.body
+
+  // Validations
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.render('auth/forgot-password', {
+      page: 'Recupera tu acceso a Bienes Raíces',
+      errors: errors.array(),
+    })
+  }
+
+  // Check if user exists
+  const user = await User.findOne({ where: { email } })
+  if (!user) {
+    return res.render('auth/forgot-password', {
+      page: 'Recupera tu acceso a Bienes Raíces',
+      errors: [{ msg: 'El correo no está registrado' }],
+    })
+  }
+
+  // Generate a new token
+  user.token = generateId()
+  await user.save()
+
+  // Send email
+  emailForgotPassword({
+    email: user.email,
+    name: user.name,
+    token: user.token,
+  })
+
+  // Show confirm message
+  return res.render('templates/message', {
+    page: 'Restablece tu contraseña',
+    message: `${user.name} hemos enviado un email con las instrucciones para restablecer tu contraseña. Por favor, revisa tu correo electrónico.`,
+  })
+}
+
+export const checkUserToken = async (req = request, res = response) => {
+  const { token } = req.params
+
+  const user = await User.findOne({ where: { token } })
+  if (!user) {
+    return res.render('auth/confirm-account', {
+      page: 'Recupera tu acceso a Bienes Raíces',
+      message: 'Hubo un error al validar tu información, intenta lo de nuevo.',
+      error: true,
+    })
+  }
+
+  // Show form to reset password
+  return res.render('auth/reset-password', {
+    page: 'Restablece tu contraseña',
+  })
+}
+
+export const updateUserPassword = async (req = request, res = response) => {
+  // Validations
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.render('auth/reset-password', {
+      page: 'Recupera tu acceso a Bienes Raíces',
+      errors: errors.array(),
+    })
+  }
+
+  const { token } = req.params
+  const { password } = req.body
+
+  // Identify who make the change
+  const user = await User.findOne({ where: { token } })
+
+  // Hashing the new password
+  const salt = await bcrypt.genSalt(10)
+  user.password = await bcrypt.hash(password, salt)
+  user.token = null
+
+  // Save changes
+  await user.save()
+
+  // Show confirm message
+  return res.render('auth/confirm-account', {
+    page: 'Contraseña restablecida',
+    message: 'La nueva contraseña se guardo correctamente.',
   })
 }

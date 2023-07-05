@@ -1,6 +1,7 @@
 import { request, response } from 'express'
 import { validationResult } from 'express-validator'
 
+import emailRegister from '../helpers/emails.js'
 import { generateId } from '../helpers/tokens.js'
 import User from '../models/user.js'
 
@@ -56,10 +57,42 @@ export const register = async (req = request, res = response) => {
     token: generateId(),
   })
 
+  // Send confirmation email
+  emailRegister({
+    name: user.name,
+    email: user.email,
+    token: user.token,
+  })
+
   // Show confirm message
   return res.render('templates/message', {
     page: 'Cuenta creada',
     message: `${user.name} tu cuenta ha sido creada correctamente. Por favor, revisa tu correo electrónico para confirmar tu cuenta.`,
+  })
+}
+
+export const confirmAccount = async (req = request, res = response) => {
+  const { token } = req.params
+
+  // Verify if token is valid
+  const user = await User.findOne({ where: { token } })
+  if (!user) {
+    return res.render('auth/confirm-account', {
+      page: 'Confirmar Cuenta',
+      message: 'Hubo un error al confirmar tu cuenta.',
+      error: true,
+    })
+  }
+
+  // Confirm user account
+  user.token = null
+  user.confirmed = true
+  await user.save()
+
+  // Show confirm message
+  return res.render('auth/confirm-account', {
+    page: 'Cuenta Confirmada',
+    message: 'La cuenta ha sido confirmada exitosamente.',
   })
 }
 

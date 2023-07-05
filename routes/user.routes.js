@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { check } from 'express-validator'
 
 import {
+  confirmAccount,
   formForgotPassword,
   formLogin, formRegister,
   register,
@@ -19,6 +20,7 @@ const router = Router()
 router.get('/login', formLogin)
 
 router.get('/register', formRegister)
+
 router.post('/register', [
   check('name').notEmpty().withMessage('El nombre es obligatorio'),
   check('email').isEmail().withMessage('El Email no es un email valido'),
@@ -32,6 +34,8 @@ router.post('/register', [
   }),
   // validateFields,
 ], register)
+
+router.get('/confirm/:token', confirmAccount)
 
 router.get('/forgot-password', formForgotPassword)
 

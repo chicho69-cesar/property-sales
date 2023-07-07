@@ -3,13 +3,61 @@ import { request, response } from 'express'
 import { validationResult } from 'express-validator'
 
 import { emailForgotPassword, emailRegister } from '../helpers/emails.js'
-import { generateId } from '../helpers/tokens.js'
+import { generateId, generateJWT } from '../helpers/tokens.js'
 import User from '../models/user.js'
 
 export const formLogin = (req = request, res = response) => {
   res.render('auth/login', {
     page: 'Iniciar Sesión',
   })
+}
+
+export const authenticateUser = async (req = request, res = response) => {
+  // Validations
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.render('auth/login', {
+      page: 'Iniciar Sesión',
+      errors: errors.array(),
+    })
+  }
+
+  const { email, password } = req.body
+
+  const user = await User.findOne({ where: { email } })
+
+  // Verify if user exists
+  if (!user) {
+    return res.render('auth/login', {
+      page: 'Iniciar Sesión',
+      errors: [{ msg: 'El usuario con ese correo no existe' }],
+    })
+  }
+
+  // Verify that the user is confirmed
+  if (!user.confirmed) {
+    return res.render('auth/login', {
+      page: 'Iniciar Sesión',
+      errors: [{ msg: 'Tu cuenta aún no ha sido confirmada' }],
+    })
+  }
+
+  // Check the password
+  if (!user.matchPassword(password)) {
+    return res.render('auth/login', {
+      page: 'Iniciar Sesión',
+      errors: [{ msg: 'La contraseña es incorrecta' }],
+    })
+  }
+
+  // Authenticate the user
+  const token = generateJWT(user)
+
+  // Save the token in the cookie session
+  return res.cookie('_token', token, {
+    httpOnly: true,
+    // secure: true,
+  }).redirect('/my-properties')
 }
 
 export const formRegister = (req = request, res = response) => {

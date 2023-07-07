@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { check } from 'express-validator'
 
 import {
+  authenticateUser,
   checkUserToken,
   confirmAccount,
   formForgotPassword,
@@ -21,6 +22,11 @@ const router = Router()
 }) */
 
 router.get('/login', formLogin)
+
+router.post('/login', [
+  check('email').isEmail().withMessage('El Email no es un email valido'),
+  check('password').notEmpty().withMessage('La contraseña es obligatoria'),
+], authenticateUser)
 
 router.get('/register', formRegister)
 

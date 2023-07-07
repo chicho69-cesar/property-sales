@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser'
 import express from 'express'
 
 import db from './config/db.js'
@@ -40,6 +41,8 @@ class Server {
     this.app.use(express.json())
     // Enable the use of the public folder
     this.app.use(express.static('public'))
+    // Cookies by cookie parser
+    this.app.use(cookieParser())
   }
 
   routes() {

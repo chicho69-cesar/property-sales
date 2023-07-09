@@ -1,5 +1,8 @@
 extends ../layouts/app-layout
 
+block styles
+  link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
+
 block content
   div.py-10.pt-2
     h1(class="text-4xl my-10 mt-5 font-extrabold text-center") Bienes 
@@ -51,6 +54,19 @@ block content
                 - n = 1;
                   while n < 7
                     option(value=n) #{n++}
+
+          div(class="border-gray-200 border-t py-5 space-y-4")
+            h3(class="text-lg leading-6 font-medium text-gray-900") Ubicación
+            p(class="text-gray-600") Ubica la propiedad en el mapa
+            #mapa(class="h-96")
+
+            div 
+              p.address
+              p(class="complete-address text-sm text-gray-600")
+
+            input(type="hidden" name="street" id="street")
+            input(type="hidden" name="lat" id="lat")
+            input(type="hidden" name="lng" id="lng")
 
 block scripts 
   script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")

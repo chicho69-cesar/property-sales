@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser'
 import express from 'express'
 
 import db from './config/db.js'
+import propertyRoutes from './routes/property.routes.js'
 import userRoutes from './routes/user.routes.js'
 
 class Server {
@@ -48,6 +49,8 @@ class Server {
   routes() {
     // Auth routes
     this.app.use('/auth', userRoutes)
+    // Property routes
+    this.app.use('/', propertyRoutes)
   }
 
   config() {

@@ -10,7 +10,8 @@
     "start": "node index",
     "css": "postcss public/css/tailwind.css -o public/css/app.css --watch",
     "js": "webpack --watch",
-    "build": "concurrently \"npm run css\" \"npm run js\""
+    "build": "concurrently \"npm run css\" \"npm run js\"",
+    "seed": "node ./database/seed/seeder.js -i"
   },
   "repository": {
     "type": "git",

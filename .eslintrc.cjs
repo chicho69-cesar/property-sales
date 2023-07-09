@@ -12,8 +12,9 @@ module.exports = {
   },
   rules: {
     semi: ['error', 'never'],
-    'linebreak-style': ['error', 'unix'],
+    // 'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
+    'linebreak-style': 'off',
     'import/extensions': [
       'off',
     ],

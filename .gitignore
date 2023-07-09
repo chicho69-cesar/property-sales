@@ -3,3 +3,4 @@ package-lock.json
 .env
 .vscode
 public/css/app.css
+public/js/map.js

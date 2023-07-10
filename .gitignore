@@ -2,5 +2,8 @@ node_modules/
 package-lock.json
 .env
 .vscode
+
 public/css/app.css
 public/js/map.js
+public/js/addImage.js
+public/uploads/

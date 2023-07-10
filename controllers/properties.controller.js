@@ -82,3 +82,61 @@ export const saveProperty = async (req = request, res = response) => {
     return res.redirect('/my-properties')
   }
 }
+
+export const addImage = async (req = request, res = response) => {
+  const { id } = req.params
+
+  // Validate that the property exists
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/my-properties')
+  }
+
+  // Validate that the property has not been published yet
+  if (property.published) {
+    return res.redirect('/my-properties')
+  }
+
+  // Validate that the property is own of who are visiting the route
+  if (property.userId.toString() !== req.user.id.toString()) {
+    return res.redirect('/my-properties')
+  }
+
+  return res.render('properties/add-image', {
+    page: `Agrega imagen a ${property.title}`,
+    property,
+  })
+}
+
+export const storeImage = async (req = request, res = response, next = undefined) => {
+  const { id } = req.params
+
+  // Validate that the property exists
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/my-properties')
+  }
+
+  // Validate that the property has not been published yet
+  if (property.published) {
+    return res.redirect('/my-properties')
+  }
+
+  // Validate that the property is own of who are visiting the route
+  if (property.userId.toString() !== req.user.id.toString()) {
+    return res.redirect('/my-properties')
+  }
+
+  try {
+    // Store the image and publish the property
+    property.image = req.file.filename
+    property.published = 1
+
+    await property.save()
+
+    return next()
+  } catch (error) {
+    console.log(error)
+    return res.redirect('/my-properties')
+  }
+}

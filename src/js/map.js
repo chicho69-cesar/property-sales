@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 // eslint-disable-next-line func-names
 (function () {
-  const lat = 21.8973177
-  const lng = -102.304627
+  const lat = document.querySelector('#lat').value || 21.8973177
+  const lng = document.querySelector('#lng').value || -102.304627
   const mapa = L.map('mapa').setView([lat, lng], 15)
 
   let marker

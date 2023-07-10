@@ -5,9 +5,20 @@ import models from '../models/index.js'
 
 const { Category, Price, Property } = models
 
-export const admin = (req = request, res = response) => {
+export const admin = async (req = request, res = response) => {
+  const { id } = req.user
+
+  const properties = await Property.findAll({
+    where: { userId: id },
+    include: [
+      { model: Category, as: 'category' },
+      { model: Price, as: 'price' },
+    ],
+  })
+
   res.render('properties/admin', {
     page: 'Mis propiedades',
+    properties,
   })
 }
 

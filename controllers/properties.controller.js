@@ -272,3 +272,24 @@ export const deleteProperty = async (req = request, res = response) => {
 
   return res.redirect('/my-properties')
 }
+
+export const showProperty = async (req = request, res = response) => {
+  const { id } = req.params
+
+  // Validate that the property exists
+  const property = await Property.findByPk(id, {
+    include: [
+      { model: Category, as: 'category' },
+      { model: Price, as: 'price' },
+    ],
+  })
+
+  if (!property) {
+    return res.redirect('/404')
+  }
+
+  return res.render('properties/show', {
+    page: property.title,
+    property,
+  })
+}

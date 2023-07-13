@@ -21,7 +21,7 @@ block content
                   img(src=`uploads/${property.image}` alt=`Imagen propiedad: ${property.title}` class="w-full block")
                 
                 div(class="sm:w-2/4 md:w-3/6 lg:w-4/6 space-y-2")
-                  a(href="" class="block text-2xl font-extrabold text-indigo-600 truncate")= property.title 
+                  a(href=`/property/${property.id}` class="block text-2xl font-extrabold text-indigo-600 truncate")= property.title 
                   p(class="text-sm text-black font-bold")= property.category.name
                   
                   p(class="text-gray-600 font-bold flex flex-row justify-start items-center gap-1")

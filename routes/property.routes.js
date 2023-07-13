@@ -8,6 +8,7 @@ import {
   deleteProperty,
   editProperty,
   saveProperty,
+  showProperty,
   storeImage,
   updateProperty,
 } from '../controllers/properties.controller.js'
@@ -66,5 +67,8 @@ router.post('/properties/edit/:id', [
 router.post('/properties/delete/:id', [
   protectRoute,
 ], deleteProperty)
+
+/* Public Routes */
+router.get('/property/:id', showProperty)
 
 export default router

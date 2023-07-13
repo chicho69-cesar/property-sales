@@ -1,5 +1,6 @@
 import { request, response } from 'express'
 import { validationResult } from 'express-validator'
+import { unlink } from 'node:fs/promises'
 
 import models from '../models/index.js'
 
@@ -245,4 +246,29 @@ export const updateProperty = async (req = request, res = response) => {
     console.log(error)
     return res.redirect('/my-properties')
   }
+}
+
+export const deleteProperty = async (req = request, res = response) => {
+  const { id } = req.params
+
+  // Validate that the property exists
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/my-properties')
+  }
+
+  // Validate that the property is own of who are visiting the route
+  if (property.userId.toString() !== req.user.id.toString()) {
+    return res.redirect('/my-properties')
+  }
+
+  // Delete the image
+  if (property.published && property.image !== '') {
+    await unlink(`public/uploads/${property.image}`)
+  }
+
+  // Delete the property
+  await property.destroy()
+
+  return res.redirect('/my-properties')
 }

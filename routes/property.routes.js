@@ -5,6 +5,7 @@ import {
   addImage,
   admin,
   createProperty,
+  deleteProperty,
   editProperty,
   saveProperty,
   storeImage,
@@ -61,5 +62,9 @@ router.post('/properties/edit/:id', [
   body('wc').isNumeric().withMessage('Selecciona el numero de baños'),
   body('street').notEmpty().withMessage('Ubica la propiedad en el mapa'),
 ], updateProperty)
+
+router.post('/properties/delete/:id', [
+  protectRoute,
+], deleteProperty)
 
 export default router

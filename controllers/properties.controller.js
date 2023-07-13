@@ -151,3 +151,98 @@ export const storeImage = async (req = request, res = response, next = undefined
     return res.redirect('/my-properties')
   }
 }
+
+export const editProperty = async (req = request, res = response) => {
+  const { id } = req.params
+
+  // Validate that the property exists
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/my-properties')
+  }
+
+  // Validate that the property is own of who are visiting the route
+  if (property.userId.toString() !== req.user.id.toString()) {
+    return res.redirect('/my-properties')
+  }
+
+  const [categories, prices] = await Promise.all([
+    Category.findAll(),
+    Price.findAll(),
+  ])
+
+  return res.render('properties/edit', {
+    page: `Editar propiedad: ${property.title}`,
+    data: property,
+    categories,
+    prices,
+  })
+}
+
+export const updateProperty = async (req = request, res = response) => {
+  // Validations
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    const [categories, prices] = await Promise.all([
+      Category.findAll(),
+      Price.findAll(),
+    ])
+
+    return res.render('properties/edit', {
+      page: 'Editar propiedad',
+      data: req.body,
+      errors: errors.array(),
+      categories,
+      prices,
+    })
+  }
+
+  const { id } = req.params
+
+  // Validate that the property exists
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/my-properties')
+  }
+
+  // Validate that the property is own of who are visiting the route
+  if (property.userId.toString() !== req.user.id.toString()) {
+    return res.redirect('/my-properties')
+  }
+
+  // Update the property
+  try {
+    const {
+      title,
+      description,
+      rooms,
+      parking,
+      wc,
+      street,
+      lat,
+      lng,
+      price: priceId,
+      category: categoryId,
+    } = req.body
+
+    property.set({
+      title,
+      description,
+      rooms,
+      parking,
+      wc,
+      street,
+      lat,
+      lng,
+      priceId,
+      categoryId,
+    })
+
+    await property.save()
+
+    return res.redirect('/my-properties')
+  } catch (error) {
+    console.log(error)
+    return res.redirect('/my-properties')
+  }
+}

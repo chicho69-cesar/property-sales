@@ -7,20 +7,53 @@ import models from '../models/index.js'
 const { Category, Price, Property } = models
 
 export const admin = async (req = request, res = response) => {
-  const { id } = req.user
+  const {
+    page: actualPage = '1',
+    limit = '10',
+  } = req.query
+  const regex = /^[0-9]+$/
 
-  const properties = await Property.findAll({
-    where: { userId: id },
-    include: [
-      { model: Category, as: 'category' },
-      { model: Price, as: 'price' },
-    ],
-  })
+  if (!regex.test(actualPage)) {
+    return res.redirect('/my-properties?page=1')
+  }
 
-  res.render('properties/admin', {
-    page: 'Mis propiedades',
-    properties,
-  })
+  try {
+    const { id } = req.user
+
+    const offset = ((+actualPage) * (+limit)) - (+limit)
+
+    const [properties, total] = await Promise.all([
+      Property.findAll({
+        limit: +limit,
+        offset,
+        where: { userId: id },
+        include: [
+          { model: Category, as: 'category' },
+          { model: Price, as: 'price' },
+        ],
+      }),
+      Property.count({
+        where: {
+          userId: id,
+        },
+      }),
+    ])
+
+    const numberOfPages = Math.ceil(total / +limit)
+
+    return res.render('properties/admin', {
+      page: 'Mis propiedades',
+      properties,
+      numberOfPages,
+      actualPage: +actualPage,
+      total,
+      offset,
+      limit: +limit,
+    })
+  } catch (error) {
+    console.log(error)
+    return res.render('404')
+  }
 }
 
 export const createProperty = async (req = request, res = response) => {

@@ -4,6 +4,7 @@ package-lock.json
 .vscode
 
 public/css/app.css
-public/js/map.js
-public/js/addImage.js
+
+public/js/*.js
+
 public/uploads/

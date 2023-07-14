@@ -2,6 +2,8 @@ import cookieParser from 'cookie-parser'
 import express from 'express'
 
 import db from './config/db.js'
+import apiRoutes from './routes/api.routes.js'
+import appRoutes from './routes/app.routes.js'
 import propertyRoutes from './routes/property.routes.js'
 import userRoutes from './routes/user.routes.js'
 
@@ -47,10 +49,14 @@ class Server {
   }
 
   routes() {
-    // Auth routes
-    this.app.use('/auth', userRoutes)
+    // App routes
+    this.app.use('/', appRoutes)
     // Property routes
     this.app.use('/', propertyRoutes)
+    // Auth routes
+    this.app.use('/auth', userRoutes)
+    // Api routes
+    this.app.use('/api', apiRoutes)
   }
 
   config() {

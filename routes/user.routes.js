@@ -7,6 +7,7 @@ import {
   confirmAccount,
   formForgotPassword,
   formLogin, formRegister,
+  logout,
   register,
   resetPassword,
   updateUserPassword,
@@ -27,6 +28,8 @@ router.post('/login', [
   check('email').isEmail().withMessage('El Email no es un email valido'),
   check('password').notEmpty().withMessage('La contraseña es obligatoria'),
 ], authenticateUser)
+
+router.post('/logout', logout)
 
 router.get('/register', formRegister)
 

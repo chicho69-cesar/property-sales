@@ -60,6 +60,10 @@ export const authenticateUser = async (req = request, res = response) => {
   }).redirect('/my-properties')
 }
 
+export const logout = async (req = request, res = response) => {
+  res.clearCookie('_token').status(200).redirect('/')
+}
+
 export const formRegister = (req = request, res = response) => {
   res.render('auth/register', {
     page: 'Crear Cuenta',

@@ -11,8 +11,15 @@ header(class="bg-indigo-600 p-4")
 
 div(class="bg-indigo-700 py-5 hidden lg:block")
   div(class="container mx-auto flex justify-between")
-    a(href="/categories/1" class="text-sm font-bold uppercase text-white") Casas
-    a(href="/categories/2" class="text-sm font-bold uppercase text-white") Departamentos
-    a(href="/categories/3" class="text-sm font-bold uppercase text-white") Bodegas
-    a(href="/categories/4" class="text-sm font-bold uppercase text-white") Terrenos
-    a(href="/categories/5" class="text-sm font-bold uppercase text-white") Cabañas
+    nav(class="flex gap-4 items-center")
+      a(href="/categories/1" class="text-sm font-bold uppercase text-white") Casas
+      a(href="/categories/2" class="text-sm font-bold uppercase text-white") Departamentos
+      a(href="/categories/3" class="text-sm font-bold uppercase text-white") Bodegas
+      a(href="/categories/4" class="text-sm font-bold uppercase text-white") Terrenos
+      a(href="/categories/5" class="text-sm font-bold uppercase text-white") Cabañas
+
+    form(class="flex gap-3 items-center" action="/searcher" method="POST") 
+      label(for="term" class="text-sm uppercase font-bold text-white") Búsqueda 
+      input(type="text" name="term" id="term" placeholder="Buscar Propiedades" class="p-2 rounded-lg shadow outline-none")
+
+      input(type="submit" value="Buscar" class="bg-indigo-800 hover:bg-indigo-400 rounded-lg text-white uppercase font-bold p-2 cursor-pointer text-sm")

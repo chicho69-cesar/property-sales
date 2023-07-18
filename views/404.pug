@@ -1,2 +1,6 @@
-h1 404 |
-  span Page not found 
+extends ./layouts/public-layout
+
+block content
+  div(class="h-96 grid place-content-center")
+    h2(class="text-center text-8xl font-extrabold pt-10") 404 | 
+      span(class="text-4xl")= page

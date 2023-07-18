@@ -1,4 +1,6 @@
 import { request, response } from 'express'
+import { Op } from 'sequelize'
+
 import models from '../models/index.js'
 
 const { Price, Category, Property } = models
@@ -41,17 +43,53 @@ export const home = async (req = request, res = response) => {
 }
 
 export const categories = async (req = request, res = response) => {
-  res.json({
-    msg: 'Categories',
+  const { id } = req.params
+
+  const category = await Category.findByPk(id)
+  if (!category) {
+    return res.redirect('/404')
+  }
+
+  const properties = await Property.findAll({
+    where: { categoryId: id },
+    include: [
+      { model: Price, as: 'price' },
+    ],
+  })
+
+  return res.render('category', {
+    page: `${category.name}s en venta`,
+    properties,
   })
 }
 
 export const notFound = (req = request, res = response) => {
-  res.render('404')
+  res.render('404', {
+    page: 'Page not found',
+  })
 }
 
 export const searcher = async (req = request, res = response) => {
-  res.json({
-    msg: 'Searcher',
+  const { term } = req.body
+  if (!term.trim()) {
+    return res.redirect('back')
+  }
+
+  // Consultar las propiedades
+  const properties = await Property.findAll({
+    where: {
+      title: {
+        [Op.like]: `%${term}%`,
+      },
+    },
+    include: [
+      { model: Price, as: 'price' },
+    ],
+  })
+
+  return res.render('search', {
+    page: `Resultados de búsqueda: ${term}`,
+    properties,
+    term,
   })
 }

@@ -87,7 +87,10 @@ export const register = async (req = request, res = response) => {
   }
 
   // Verify if email exists
-  const userExists = await User.findOne({ email })
+  const userExists = await User.findOne({
+    where: { email },
+  })
+
   if (userExists) {
     return res.render('auth/register', {
       page: 'Crear Cuenta',

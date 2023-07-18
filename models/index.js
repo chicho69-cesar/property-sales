@@ -1,4 +1,5 @@
 import Category from './category.js'
+import Message from './message.js'
 import Price from './price.js'
 import Property from './property.js'
 import User from './user.js'
@@ -17,8 +18,21 @@ Property.belongsTo(User, {
   foreignKey: 'userId',
 })
 
+Property.hasMany(Message, {
+  foreignKey: 'propertyId',
+})
+
+Message.belongsTo(Property, {
+  foreignKey: 'propertyId',
+})
+
+Message.belongsTo(User, {
+  foreignKey: 'userId',
+})
+
 const models = {
   Category,
+  Message,
   Price,
   Property,
   User,

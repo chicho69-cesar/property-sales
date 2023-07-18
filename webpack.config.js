@@ -8,6 +8,7 @@ export default {
     addImage: './src/js/add-image.js',
     showMap: './src/js/show-map.js',
     homeMap: './src/js/home-map.js',
+    changeState: './src/js/change-state.js',
   },
   output: {
     filename: '[name].js',

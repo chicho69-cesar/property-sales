@@ -4,6 +4,7 @@ import { body, check } from 'express-validator'
 import {
   addImage,
   admin,
+  changeState,
   createProperty,
   deleteProperty,
   editProperty,
@@ -70,6 +71,10 @@ router.post('/properties/edit/:id', [
 router.post('/properties/delete/:id', [
   protectRoute,
 ], deleteProperty)
+
+router.patch('/property/:id', [
+  protectRoute,
+], changeState)
 
 router.get('/messages/:id', [
   protectRoute,

@@ -311,6 +311,28 @@ export const deleteProperty = async (req = request, res = response) => {
   return res.redirect('/my-properties')
 }
 
+export const changeState = async (req = request, res = response) => {
+  const { id } = req.params
+
+  const property = await Property.findByPk(id)
+  if (!property) {
+    return res.redirect('/my-properties')
+  }
+
+  if (property.userId.toString() !== req.user.id.toString()) {
+    return res.redirect('/my-properties')
+  }
+
+  // Change the state
+  property.published = !property.published
+
+  await property.save()
+
+  return res.json({
+    result: true,
+  })
+}
+
 export const showProperty = async (req = request, res = response) => {
   const { id } = req.params
 
@@ -322,7 +344,7 @@ export const showProperty = async (req = request, res = response) => {
     ],
   })
 
-  if (!property) {
+  if (!property || !property.published) {
     return res.redirect('/404')
   }
 

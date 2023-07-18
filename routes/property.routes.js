@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { body } from 'express-validator'
+import { body, check } from 'express-validator'
 
 import {
   addImage,
@@ -8,10 +8,13 @@ import {
   deleteProperty,
   editProperty,
   saveProperty,
+  sendMessage,
+  showMessages,
   showProperty,
   storeImage,
   updateProperty,
 } from '../controllers/properties.controller.js'
+import identifyUser from '../middlewares/identify-user.js'
 import protectRoute from '../middlewares/protect-route.js'
 import upload from '../middlewares/upload-image.js'
 
@@ -68,7 +71,18 @@ router.post('/properties/delete/:id', [
   protectRoute,
 ], deleteProperty)
 
+router.get('/messages/:id', [
+  protectRoute,
+], showMessages)
+
 /* Public Routes */
-router.get('/property/:id', showProperty)
+router.get('/property/:id', [
+  identifyUser,
+], showProperty)
+
+router.post('/property/:id', [
+  identifyUser,
+  check('message').isLength({ min: 10 }).withMessage('El mensaje no puede ir vació o es muy corto'),
+], sendMessage)
 
 export default router

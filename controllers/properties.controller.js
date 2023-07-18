@@ -2,9 +2,13 @@ import { request, response } from 'express'
 import { validationResult } from 'express-validator'
 import { unlink } from 'node:fs/promises'
 
+import formatDate from '../helpers/format-date.js'
+import isSeller from '../helpers/is-seller.js'
 import models from '../models/index.js'
 
-const { Category, Price, Property } = models
+const {
+  Category, Message, Price, Property, User,
+} = models
 
 export const admin = async (req = request, res = response) => {
   const {
@@ -30,6 +34,7 @@ export const admin = async (req = request, res = response) => {
         include: [
           { model: Category, as: 'category' },
           { model: Price, as: 'price' },
+          { model: Message, as: 'messages' },
         ],
       }),
       Property.count({
@@ -321,8 +326,87 @@ export const showProperty = async (req = request, res = response) => {
     return res.redirect('/404')
   }
 
+  const isTheSeller = isSeller(req.user?.id, property.userId)
+
   return res.render('properties/show', {
     page: property.title,
     property,
+    user: req.user,
+    isSeller: isTheSeller,
+  })
+}
+
+export const sendMessage = async (req = request, res = response) => {
+  const { id } = req.params
+
+  // Validate that the property exists
+  const property = await Property.findByPk(id, {
+    include: [
+      { model: Category, as: 'category' },
+      { model: Price, as: 'price' },
+    ],
+  })
+
+  if (!property) {
+    return res.redirect('/404')
+  }
+
+  const isTheSeller = isSeller(req.user?.id, property.userId)
+
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.render('properties/show', {
+      page: property.title,
+      property,
+      errors: errors.array(),
+      user: req.user,
+      isSeller: isTheSeller,
+    })
+  }
+
+  const { message } = req.body
+  const propertyId = id
+  const userId = req.user.id
+
+  await Message.create({
+    message,
+    propertyId,
+    userId,
+  })
+
+  return res.render('properties/show', {
+    page: property.title,
+    property,
+    user: req.user,
+    isSeller: isTheSeller,
+    sended: true,
+  })
+}
+
+export const showMessages = async (req = request, res = response) => {
+  const { id } = req.params
+
+  const property = await Property.findByPk(id, {
+    include: [
+      {
+        model: Message,
+        as: 'messages',
+        include: [{ model: User.scope('deletePassword'), as: 'user' }],
+      },
+    ],
+  })
+
+  if (!property) {
+    return res.redirect('/my-properties')
+  }
+
+  if (property.userId.toString() !== req.user.id.toString()) {
+    return res.redirect('/my-properties')
+  }
+
+  return res.render('properties/messages', {
+    page: 'Mensajes',
+    messages: property.messages,
+    formatDate,
   })
 }
